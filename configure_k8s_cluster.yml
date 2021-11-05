@@ -1,0 +1,13 @@
+- name: To Configure Master Node
+  hosts: k8s-Master
+  vars_files:
+         - vault.yml
+  roles:
+         - role: /root/ROLES-Task19/roles/ec2_k8s_master
+
+- name: To configure SLave Node           
+  hosts: k8s-Slave
+  vars_files:
+          - vault.yml
+  roles:
+          - role: /root/ROLES-Task19/roles/ec2_k8s_slave

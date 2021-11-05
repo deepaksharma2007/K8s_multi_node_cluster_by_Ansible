@@ -1,0 +1,19 @@
+---
+# vars file for provisioning
+file_path: /root/TASK-19/
+master_image: ami-00bf4ae5a7909786c
+master_region: "ap-south-1"
+master_instance_type: "t2.micro"
+master_keypair: arthkey
+master_security_group: "launch-wizard-1"
+master_subnet_id: "subnet-5b8de617"
+
+slave_image: ami-00bf4ae5a7909786c
+slave_region: "ap-south-1"
+slave_instance_type: "t2.micro"
+slave_keypair: arthkey
+slave_security_group: "launch-wizard-1"
+slave_subnet_id: "subnet-5b8de617"
+
+inventory_location: "/etc/inventory.txt"
+

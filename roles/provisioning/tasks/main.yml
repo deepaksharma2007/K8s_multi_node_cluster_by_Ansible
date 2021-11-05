@@ -1,0 +1,67 @@
+---
+# tasks file for provisioning
+  - name: "Launch Master Node"
+    ec2_instance:
+       key_name: "{{ master_keypair }}"
+       security_group: "{{ master_security_group }}"
+       instance_type: "{{ master_instance_type }}"
+       image_id: "{{ master_image }}"
+       region: "{{ master_region }}"
+       vpc_subnet_id: "{{ master_subnet_id }}"
+       aws_access_key: "{{ accesskey }}"
+       aws_secret_key: "{{ secretkey }}"
+       wait: yes
+       state: present
+       name: Master_K8s
+    register: ec2_master
+
+  - name: "Updating inventory for Master Node..."
+    blockinfile:
+      path: "{{ inventory_location }}"
+      block: |
+        [k8s-Master]
+        {{ec2_master['instances'][0]['public_ip_address']}}
+      marker: ""
+
+  - name: "Launch Slave-1 Node"
+    ec2_instance:
+       key_name: "{{ slave_keypair }}"
+       security_group: "{{ slave_security_group }}"
+       instance_type: "{{ slave_instance_type }}"
+       image_id: "{{ slave_image }}"
+       region: "{{ slave_region }}"
+       vpc_subnet_id: "{{ slave_subnet_id }}"
+       aws_access_key: "{{ accesskey }}"
+       aws_secret_key: "{{ secretkey }}"
+       wait: yes
+       name: Slave-1
+       state: present
+    register: ec2_slave1
+
+  - name: "Launch Slave-2 Node"
+    ec2_instance:
+       key_name: "{{ slave_keypair }}"
+       security_group: "{{ slave_security_group }}"
+       instance_type: "{{ slave_instance_type }}"
+       image_id: "{{ slave_image }}"
+       region: "{{ slave_region }}"
+       vpc_subnet_id: "{{ slave_subnet_id }}"
+       aws_access_key: "{{ accesskey }}"
+       aws_secret_key: "{{ secretkey }}"
+       wait: yes
+       name: Slave-2
+       state: present
+    register: ec2_slave2
+
+  - name: "Updating inventory for Slave Node..."
+    blockinfile:
+      path: "{{ inventory_location }}"
+      block: |
+         [k8s-Slave]
+         {{ec2_slave1['instances'][0]['public_ip_address']}}
+         {{ec2_slave2['instances'][0]['public_ip_address']}}
+      marker: ""
+
+  - debug:
+          var: ec2_master
+
